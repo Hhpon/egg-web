@@ -141,7 +141,7 @@ class HomeController extends Controller {
   async onLogin() {
     const ctx = this.ctx;
     const code = ctx.request.body.code;
-    console.log(code);
+    const userInfo = ctx.request.body.userInfo;
 
     const appid = 'wx96491a51058b7949'
     const secret = 'e4e625fab4186ea849059dbdaaf5bf6d'
@@ -150,10 +150,26 @@ class HomeController extends Controller {
       dataType: 'json',
       timeout: 3000
     })
+    const openid = result.data.openid;
+    userInfo.openId = openid;
 
-    console.log(result.data);
+    // 连接 User 数据库
+    const User = ctx.model.User;
 
-    ctx.body = 'ok';
+    const user = new User({
+      nickName: userInfo.nickName,
+      gender: userInfo.gender,
+      language: userInfo.language,
+      city: userInfo.city,
+      province: userInfo.province,
+      country: userInfo.country,
+      avatarUrl: userInfo.avatarUrl,
+      openId: userInfo.openId
+    })
+
+    await user.save();
+
+    ctx.body = openid;
   }
 }
 
