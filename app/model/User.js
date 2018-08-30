@@ -10,7 +10,8 @@ module.exports = app => {
         province: { type: String },
         country: { type: String },
         avatarUrl: { type: String },
-        openId: { type: String }
+        openId: { type: String },
+        orderLists: { type: Array }
     });
 
     return mongoose.model('User', UserSchema);
