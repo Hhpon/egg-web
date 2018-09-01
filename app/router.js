@@ -12,4 +12,5 @@ module.exports = app => {
   router.post('/getGoods', controller.home.getGoods);
   router.post('/getGoodDetails', controller.home.getGoodDetails);
   router.post('/onLogin', controller.home.onLogin);
+  router.post('/sellHandle', controller.home.sellHandle);
 };

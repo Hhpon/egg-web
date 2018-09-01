@@ -172,6 +172,14 @@ class HomeController extends Controller {
 
     ctx.body = openid;
   }
+
+  async sellHandle() {
+    const ctx = this.ctx;
+    const sellNum = ctx.request.body.sellNum;
+    const goodDetails = ctx.request.body.goodDetails;
+
+    ctx.body = 'ok';
+  }
 }
 
 module.exports = HomeController;
