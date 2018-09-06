@@ -180,6 +180,16 @@ class HomeController extends Controller {
 
     ctx.body = 'ok';
   }
+
+  async shoppingCart() {
+    const ctx = this.ctx;
+    const goodDetail = ctx.request.body.goodDetail;
+    goodDetail.status
+
+    console.log(goodDetail);
+
+    ctx.body = 'ok';
+  }
 }
 
 module.exports = HomeController;
