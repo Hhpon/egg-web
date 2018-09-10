@@ -184,11 +184,34 @@ class HomeController extends Controller {
   async shoppingCart() {
     const ctx = this.ctx;
     const goodDetail = ctx.request.body.goodDetail;
-    goodDetail.status
+    const openId = ctx.request.body.openId;
+    let goodStatus = false;
+    goodDetail.status = 1;
 
-    console.log(goodDetail);
+    const User = ctx.model.User;
 
-    ctx.body = 'ok';
+    let userInfo = await User.findOne({ openId: openId });
+    let orderListsInfo = userInfo.orderLists;
+    // orderListsInfo.forEach(element => {
+    //   if (element.goodsId === goodDetail.goodsId) {
+    //     goodStatus = true;
+    //     break;
+    //   }
+    // });
+    for(let i=0; i<orderListsInfo.length; i++){
+      if(orderListsInfo[i].goodsId === goodDetail.goodsId){
+        goodStatus = true;
+        break;
+      }
+    }
+
+    if (goodStatus) {
+      ctx.body = 100;
+    } else {
+      await User.updateOne({ openId: openId }, { $push: { orderLists: goodDetail } });
+      ctx.body = 200;
+    }
+
   }
 }
 
