@@ -14,4 +14,5 @@ module.exports = app => {
   router.post('/onLogin', controller.webtaro.onLogin);
   router.post('/sellHandle', controller.webtaro.sellHandle);
   router.post('/shoppingCart', controller.webtaro.shoppingCart);
+  router.post('/getorderLists', controller.webtaro.getorderLists);
 };
