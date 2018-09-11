@@ -5,13 +5,13 @@
  */
 module.exports = app => {
   const { router, controller } = app;
-  router.get('/gettoken', controller.home.gettoken);
-  router.post('/uploadMes', controller.home.uploadMes);
-  router.get('/gettableGoods', controller.home.gettableGoods);
-  router.post('/deleteGood', controller.home.deleteGood);
-  router.post('/getGoods', controller.home.getGoods);
-  router.post('/getGoodDetails', controller.home.getGoodDetails);
-  router.post('/onLogin', controller.home.onLogin);
-  router.post('/sellHandle', controller.home.sellHandle);
-  router.post('/shoppingCart', controller.home.shoppingCart);
+  router.get('/gettoken', controller.webback.gettoken);
+  router.post('/uploadMes', controller.webback.uploadMes);
+  router.get('/gettableGoods', controller.webback.gettableGoods);
+  router.post('/deleteGood', controller.webback.deleteGood);
+  router.post('/getGoods', controller.webtaro.getGoods);
+  router.post('/getGoodDetails', controller.webtaro.getGoodDetails);
+  router.post('/onLogin', controller.webtaro.onLogin);
+  router.post('/sellHandle', controller.webtaro.sellHandle);
+  router.post('/shoppingCart', controller.webtaro.shoppingCart);
 };
