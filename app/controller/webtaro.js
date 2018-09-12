@@ -73,6 +73,7 @@ class WebtaroController extends Controller {
         const goodDetail = ctx.request.body.goodDetail;
         const openId = ctx.request.body.openId;
         let goodStatus = false;
+        goodDetail.shoppingNum = 1;
         goodDetail.status = 1;
 
         const User = ctx.model.User;
