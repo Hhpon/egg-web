@@ -5,6 +5,7 @@ const qiniu = require('qiniu');
 
 class WebtaroController extends Controller {
 
+    // 主页面获取商品列表
     async getGoods() {
         const ctx = this.ctx;
         const index = '' + ctx.request.body.index;
@@ -15,6 +16,7 @@ class WebtaroController extends Controller {
         ctx.body = getGoods;
     }
 
+    // 商品详情页面获取详情
     async getGoodDetails() {
         const ctx = this.ctx;
         const goodId = ctx.request.body.goodId;
@@ -25,6 +27,7 @@ class WebtaroController extends Controller {
         ctx.body = goodsDetails;
     }
 
+    // 登录接口，从微信服务器获取
     async onLogin() {
         const ctx = this.ctx;
         const code = ctx.request.body.code;
@@ -60,6 +63,7 @@ class WebtaroController extends Controller {
         ctx.body = openid;
     }
 
+    // 购买操作 - 待开发，无接口
     async sellHandle() {
         const ctx = this.ctx;
         const sellNum = ctx.request.body.sellNum;
@@ -68,6 +72,7 @@ class WebtaroController extends Controller {
         ctx.body = 'ok';
     }
 
+    // 加入购物车操作
     async shoppingCart() {
         const ctx = this.ctx;
         const goodDetail = ctx.request.body.goodDetail;
@@ -102,15 +107,53 @@ class WebtaroController extends Controller {
 
     }
 
+    // 购物车页面获取商品路由
     async getorderLists() {
         const ctx = this.ctx;
         const openId = ctx.request.body.openId;
 
         const User = ctx.model.User;
-        let userInfo =await User.findOne({openId: openId});
+        let userInfo = await User.findOne({ openId: openId });
         let orderLists = userInfo.orderLists;
 
         ctx.body = orderLists
+    }
+
+    // 购物车删除商品
+    async deleteUserOrderList() {
+        const ctx = this.ctx;
+        const openId = ctx.request.body.openId;
+        const goodsId = ctx.request.body.goodsId;
+
+        const User = ctx.model.User;
+
+        await User.updateOne({ openId: openId }, { $pull: { orderLists: { goodsId: goodsId } } });
+
+        let userInfo = await User.findOne({ openId: openId });
+        let orderLists = userInfo.orderLists;
+
+        ctx.body = orderLists
+    }
+
+    // 购物车编辑商品
+    async editUserOrderList() {
+        const ctx = this.ctx;
+        const openId = ctx.request.body.openId;
+        const goodsId = ctx.request.body.goodsId;
+        const kindof = ctx.request.body.kindof;
+
+        console.log(kindof);
+
+        const User = ctx.model.User;
+
+        if (kindof === 'add') {
+            console.log('add');
+            await User.updateOne({ openId: openId, 'orderLists.goodsId': goodsId }, { $inc: { 'orderLists.$.shoppingNum': 1 } });
+        } else {
+            await User.updateOne({ openId: openId, 'orderLists.goodsId': goodsId }, { $inc: { 'orderLists.$.shoppingNum': -1 } });
+        }
+
+        ctx.body = 'ok';
     }
 }
 
