@@ -5,8 +5,8 @@ module.exports = app => {
   const GoodsDetailsSchema = new Schema({
     name: { type: String },
     subTitle: { type: String },
-    price: { type: String },
-    oldPrice: { type: String },
+    price: { type: Number },
+    oldPrice: { type: Number },
     amount: { type: Number },
     saleAmount: { type: Number },
     classifyValue: { type: Array },

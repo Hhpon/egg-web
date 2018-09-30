@@ -5,8 +5,8 @@ module.exports = app => {
   const GoodSchema = new Schema({
     name: { type: String },
     subTitle: { type: String },
-    price: { type: String },
-    oldPrice: { type: String },
+    price: { type: Number },
+    oldPrice: { type: Number },
     classifyValue: { type: Array },
     sliderUrl: { type: String },
     titleUrl: { type: String },
