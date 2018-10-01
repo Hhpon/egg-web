@@ -17,4 +17,5 @@ module.exports = app => {
   router.post('/getorderLists', controller.webtaro.getorderLists);
   router.post('/deleteUserOrderList', controller.webtaro.deleteUserOrderList);
   router.post('/editUserOrderList', controller.webtaro.editUserOrderList);
+  router.get('/getUserinfo', controller.webtaro.getUserinfo);
 };

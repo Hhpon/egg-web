@@ -155,6 +155,17 @@ class WebtaroController extends Controller {
 
         ctx.body = 'ok';
     }
+
+    // 获取用户个人信息
+    async getUserinfo() {
+        const ctx = this.ctx;
+        const openId = ctx.request.query.openId;
+
+        const User = ctx.model.User;
+        let userInfo = await User.findOne({ openId: openId });
+        
+        ctx.body = userInfo;
+    }
 }
 
 module.exports = WebtaroController;
