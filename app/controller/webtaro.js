@@ -79,18 +79,13 @@ class WebtaroController extends Controller {
         const openId = ctx.request.body.openId;
         let goodStatus = false;
         goodDetail.shoppingNum = 1;
-        goodDetail.status = 1;
+        goodDetail.Itemstatus = 1;
+        goodDetail.goodcheckStatus = true;
 
         const User = ctx.model.User;
 
         let userInfo = await User.findOne({ openId: openId });
         let orderListsInfo = userInfo.orderLists;
-        // orderListsInfo.forEach(element => {
-        //   if (element.goodsId === goodDetail.goodsId) {
-        //     goodStatus = true;
-        //     break;
-        //   }
-        // });
         for (let i = 0; i < orderListsInfo.length; i++) {
             if (orderListsInfo[i].goodsId === goodDetail.goodsId) {
                 goodStatus = true;
