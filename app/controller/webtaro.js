@@ -137,12 +137,9 @@ class WebtaroController extends Controller {
         const goodsId = ctx.request.body.goodsId;
         const kindof = ctx.request.body.kindof;
 
-        console.log(kindof);
-
         const User = ctx.model.User;
 
         if (kindof === 'add') {
-            console.log('add');
             await User.updateOne({ openId: openId, 'orderLists.goodsId': goodsId }, { $inc: { 'orderLists.$.shoppingNum': 1 } });
         } else {
             await User.updateOne({ openId: openId, 'orderLists.goodsId': goodsId }, { $inc: { 'orderLists.$.shoppingNum': -1 } });
@@ -158,7 +155,7 @@ class WebtaroController extends Controller {
 
         const User = ctx.model.User;
         let userInfo = await User.findOne({ openId: openId });
-        
+
         ctx.body = userInfo;
     }
 }
