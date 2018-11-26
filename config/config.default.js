@@ -18,7 +18,7 @@ module.exports = appInfo => {
   };
 
   exports.mongoose = {
-    url: 'mongodb://127.0.0.1/homeMall',
+    url: 'mongodb://127.0.0.1:20811/homeMall',
     options: { useNewUrlParser: true },
   };
 
