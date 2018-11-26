@@ -5,6 +5,7 @@
  */
 module.exports = app => {
   const { router, controller } = app;
+  router.get('/', controller.webback.test)
   router.get('/gettoken', controller.webback.gettoken);
   router.post('/uploadMes', controller.webback.uploadMes);
   router.get('/gettableGoods', controller.webback.gettableGoods);

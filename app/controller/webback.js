@@ -5,6 +5,12 @@ const qiniu = require('qiniu');
 
 class WebbackController extends Controller {
 
+  async test(){
+    const ctx = this.ctx;
+
+    ctx.body = '该域名只能使用https访问哦！'
+  }
+
   async gettoken() {
     const ctx = this.ctx;
     //设置上传的空间 bucket_name
