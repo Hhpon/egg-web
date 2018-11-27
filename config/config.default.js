@@ -14,7 +14,11 @@ module.exports = appInfo => {
     csrf: {
       enable: false,
     },
-    domainWhiteList: '*'
+    domainWhiteList: ['*']
+  };
+
+  config.cors = {
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   };
 
   exports.mongoose = {
