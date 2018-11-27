@@ -3,10 +3,10 @@
 // had enabled by egg
 // exports.static = true;
 
-// exports.cors = {
-//     enable: true,
-//     package: 'egg-cors',
-// };
+exports.cors = {
+    enable: true,
+    package: 'egg-cors',
+};
 
 exports.mongoose = {
     enable: true,

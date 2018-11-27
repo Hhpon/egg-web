@@ -34,7 +34,7 @@ class WebtaroController extends Controller {
         const userInfo = ctx.request.body.userInfo;
 
         const appid = 'wx96491a51058b7949'
-        const secret = 'e4e625fab4186ea849059dbdaaf5bf6d'
+        const secret = '23ce20c8b940ba1da3a1dfded659a0d6'
 
         const result = await ctx.curl('https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + code + '&grant_type=authorization_code', {
             dataType: 'json',
