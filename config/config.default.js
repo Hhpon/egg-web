@@ -10,12 +10,12 @@ module.exports = appInfo => {
     prefix: '/'
   }
 
-  // config.security = {
-  //   csrf: {
-  //     enable: false,
-  //   },
-  //   domainWhiteList: ['http://localhost:8080/']
-  // };
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+    domainWhiteList: '*'
+  };
 
   exports.mongoose = {
     url: 'mongodb://127.0.0.1/homeMall',
