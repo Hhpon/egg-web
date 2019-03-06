@@ -165,7 +165,9 @@ class HomeController extends Controller {
       country: userInfo.country,
       avatarUrl: userInfo.avatarUrl,
       openId: userInfo.openId,
-      orderLists: userInfo.orderLists
+      cart: userInfo.cart,
+      address: userInfo.address,
+      orderList: userInfo.orderList
     })
 
     await user.save();
@@ -191,15 +193,15 @@ class HomeController extends Controller {
     const User = ctx.model.User;
 
     let userInfo = await User.findOne({ openId: openId });
-    let orderListsInfo = userInfo.orderLists;
-    // orderListsInfo.forEach(element => {
+    let cartInfo = userInfo.cart;
+    // cartInfo.forEach(element => {
     //   if (element.goodsId === goodDetail.goodsId) {
     //     goodStatus = true;
     //     break;
     //   }
     // });
-    for(let i=0; i<orderListsInfo.length; i++){
-      if(orderListsInfo[i].goodsId === goodDetail.goodsId){
+    for (let i = 0; i < cartInfo.length; i++) {
+      if (cartInfo[i].goodsId === goodDetail.goodsId) {
         goodStatus = true;
         break;
       }
@@ -208,7 +210,7 @@ class HomeController extends Controller {
     if (goodStatus) {
       ctx.body = 100;
     } else {
-      await User.updateOne({ openId: openId }, { $push: { orderLists: goodDetail } });
+      await User.updateOne({ openId: openId }, { $push: { cart: goodDetail } });
       ctx.body = 200;
     }
 
