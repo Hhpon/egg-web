@@ -7,6 +7,7 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.webback.test);
   router.post('/getWechatMes', controller.webtaro.getWechatMes);
+  router.post('/toPay', controller.webtaro.toPay);
   router.get('/gettoken', controller.webback.gettoken);
   router.post('/uploadMes', controller.webback.uploadMes);
   router.get('/gettableGoods', controller.webback.gettableGoods);

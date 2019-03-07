@@ -2,13 +2,84 @@
 
 const Controller = require('egg').Controller;
 const qiniu = require('qiniu');
+const md5 = require('../service/md5');
+
 
 class WebtaroController extends Controller {
 
+  // 微信接口统一下单API收取微信回调支付结果通知
   async getWechatMes() {
     const ctx = this.ctx;
     console.log(ctx.request.body);
     ctx.body = 'ok'
+  }
+
+  // 统一下单API
+  async toPay() {
+    const ctx = this.ctx;
+    const openid = ctx.request.body.openId;
+    const appid = ctx.request.body.appId;
+    const mch_id = ctx.request.body.mch_id;
+    const nonce_str = Math.random().toString(36).substr(2, 15);
+    const body = ctx.request.body.body;
+    const out_trade_no = ctx.request.body.out_trade_no;
+    const total_fee = ctx.request.body.total_fee;
+    const spbill_create_ip = ctx.request.body.spbill_create_ip;
+    const notify_url = ctx.request.body.notify_url;
+    const trade_type = ctx.request.body.trade_type;
+
+    const mes = {
+      openid: openid,
+      appid: appid,
+      mch_id: mch_id,
+      nonce_str: nonce_str,
+      body: body,
+      out_trade_no: out_trade_no,
+      total_fee: total_fee,
+      spbill_create_ip: spbill_create_ip,
+      notify_url: notify_url,
+      trade_type: trade_type
+    }
+
+    const signASCII = sort_ASCII(mes);
+    const signString = JSON.stringify(signASCII).replace(/\,/g, "&").replace(/\:/g, "=").replace(/\"/g, "").replace(/\{/g, "").replace(/\}/g, "");
+    const stringSignTemp = signString + '&key=sxpyangpeng2018sxpyangpeng201818';
+    const sign = md5(stringSignTemp).toUpperCase();
+
+    const rePay = await ctx.curl('https://api.mch.weixin.qq.com/pay/unifiedorder', {
+      method: 'POST',
+      contentType: 'text/html',
+      data: {
+        openid: openid,
+        appid: appid,
+        mch_id: mch_id,
+        nonce_str: nonce_str,
+        sign: sign,
+        body: body,
+        out_trade_no: out_trade_no,
+        total_fee: total_fee,
+        spbill_create_ip: spbill_create_ip,
+        notify_url: notify_url,
+        trade_type: trade_type
+      }
+    });
+
+    function sort_ASCII(obj) {
+      var arr = new Array();
+      var num = 0;
+      for (var i in obj) {
+        arr[num] = i;
+        num++;
+      }
+      var sortArr = arr.sort();
+      var sortObj = {};
+      for (var i in sortArr) {
+        sortObj[sortArr[i]] = obj[sortArr[i]];
+      }
+      return sortObj;
+    }
+
+    ctx.body = rePay.data;
   }
 
   // 主页面获取商品列表
