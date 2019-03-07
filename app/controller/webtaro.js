@@ -5,6 +5,12 @@ const qiniu = require('qiniu');
 
 class WebtaroController extends Controller {
 
+  async getWechatMes() {
+    const ctx = this.ctx;
+    console.log(ctx.request.body);
+    ctx.body = 'ok'
+  }
+
   // 主页面获取商品列表
   async getGoods() {
     const ctx = this.ctx;
