@@ -15,7 +15,12 @@ class WebtaroController extends Controller {
     const ctx = this.ctx;
     console.log(ctx.request.body);
     fs.writeFileSync('chatMes.txt', ctx.request.body)
-    ctx.body = 'ok'
+    if (ctx.request.body !== null) {
+      const result = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>'
+      ctx.body = result;
+    } else {
+      ctx.body = 'fail';
+    }
   }
 
   // 统一下单API
