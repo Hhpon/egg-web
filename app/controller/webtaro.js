@@ -2,12 +2,14 @@
 
 const Controller = require('egg').Controller;
 const qiniu = require('qiniu');
+const fs = require('fs')
 
 class WebtaroController extends Controller {
 
   async getWechatMes() {
     const ctx = this.ctx;
     console.log(ctx.request.body);
+    fs.writeFileSync('chatMes.txt', ctx.request.body)
     ctx.body = 'ok'
   }
 
