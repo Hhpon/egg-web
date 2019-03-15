@@ -2,16 +2,130 @@
 
 const Controller = require('egg').Controller;
 const qiniu = require('qiniu');
+const md5 = require('../service/md5');
+const xml2js = require('xml2js')
+
+const parser = new xml2js.Parser()
 const fs = require('fs')
 
 class WebtaroController extends Controller {
 
+  // 微信接口统一下单API收取微信回调支付结果通知
   async getWechatMes() {
     const ctx = this.ctx;
     console.log(ctx.request.body);
     fs.writeFileSync('chatMes.txt', ctx.request.body)
     ctx.body = 'ok'
   }
+
+  // 统一下单API
+  async toRePay() {
+    const ctx = this.ctx;
+    const openid = ctx.request.body.openId;
+    const appid = ctx.request.body.appId;
+    const mch_id = ctx.request.body.mch_id;
+    const nonce_str = Math.random().toString(36).substr(2, 15);
+    const body = ctx.request.body.body;
+    const out_trade_no = ctx.request.body.out_trade_no;
+    const total_fee = ctx.request.body.total_fee;
+    const spbill_create_ip = ctx.request.body.spbill_create_ip;
+    const notify_url = ctx.request.body.notify_url;
+    const trade_type = ctx.request.body.trade_type;
+
+    // 处理前端传来的数据，生成签名sign
+    const signString = `appid=${appid}&body=${body}&mch_id=${mch_id}&nonce_str=${nonce_str}&notify_url=${notify_url}&openid=${openid}&out_trade_no=${out_trade_no}&spbill_create_ip=${spbill_create_ip}&total_fee=${total_fee}&trade_type=${trade_type}&key=sxpyangpeng2018sxpyangpeng201818`
+    const sign = md5.md5(signString).toUpperCase();
+
+    const rePayMes = {
+      openid: openid,                                 //用户openid
+      appid: appid,                                   //小程序appid
+      mch_id: mch_id,                                 //商户号
+      nonce_str: nonce_str,                           //随机字符串
+      sign: sign,                                     //签名
+      body: body,                                     //商品描述
+      out_trade_no: out_trade_no,                     //商户订单号
+      total_fee: total_fee,                           //标价金额
+      spbill_create_ip: spbill_create_ip,             //终端IP
+      notify_url: notify_url,                         //通知地址（外网可访问）
+      trade_type: trade_type                          //交易类型（小程序填'JSAPI'）
+    }
+
+    // 将json转换成xml格式才能传到微信后台
+    function json2xml(obj) {
+      return _json2xml('xml', obj).replace('<xml>', '<xml>');
+
+      function _json2xml(key, obj) {
+        var xml = '';
+        if (Array.isArray(obj)) {
+          for (var i = 0; i < obj.length; ++i) {
+            xml += _json2xml(key, obj[i]);
+          }
+          return xml;
+        } else if (typeof obj === 'object') {
+          for (var _key in obj) {
+            xml += _json2xml(_key, obj[_key]);
+          }
+          return _concat(key, xml);
+        } else {
+          return _concat(key, obj);
+        }
+      }
+
+      function _concat(key, item) {
+        return '<' + key + '>' + item + '</' + key + '>';
+      }
+    }
+
+    const xmlAsStr = json2xml(rePayMes);
+
+    // 将数据传递到微信后台获取prepay_id
+    const rePay = await ctx.curl('https://api.mch.weixin.qq.com/pay/unifiedorder', {
+      method: 'POST',
+      content: xmlAsStr.toString(),
+      headers: {
+        'content-type': 'text/html',
+      },
+    });
+
+    console.log(rePay.data);
+
+    ctx.body = rePay.data;
+  }
+
+  async signAgain() {
+    const ctx = this.ctx;
+    const sign = ctx.request.body.sign;
+    const appid = ctx.request.body.appId;
+    const timeStamp = ctx.request.body.timeStamp;
+    const nonceStr = Math.random().toString(36).substr(2, 15);
+    const signType = ctx.request.body.signType;
+    const prepay_id = sign.split('prepay_id')[1].slice(10, -5);
+
+    // 再次签名(第一次签名是appid，第二次是appId，注意大小写)
+    const signAgain = `appId=${appid}&nonceStr=${nonceStr}&package=prepay_id=${prepay_id}&signType=${signType}&timeStamp=${timeStamp}&key=sxpyangpeng2018sxpyangpeng201818`
+    const paySign = md5.md5(signAgain).toUpperCase();
+
+    console.log(signAgain);
+    console.log(paySign);
+    const payData = {
+      nonceStr: nonceStr,
+      paySign: paySign,
+      prepay_id: prepay_id,
+      timeStamp: timeStamp
+    }
+
+    ctx.body = payData;
+  }
+
+
+
+
+
+
+
+
+
+
 
   // 主页面获取商品列表
   async getGoods() {
@@ -42,8 +156,8 @@ class WebtaroController extends Controller {
     const userInfo = ctx.request.body.userInfo;
     console.log(code);
     console.log(userInfo);
-    const appid = 'wx96491a51058b7949'
-    const secret = '149a7463a8e9e13f0b53758490af496a'
+    const appid = 'wx083cd7624c4db2ec'
+    const secret = 'cbd202762394dde17eacd80fbc71ebda'
 
     const result = await ctx.curl('https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + code + '&grant_type=authorization_code', {
       dataType: 'json',

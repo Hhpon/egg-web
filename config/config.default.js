@@ -26,6 +26,13 @@ module.exports = appInfo => {
     options: { useNewUrlParser: true },
   };
 
+  config.bodyParser = {
+    enableTypes: ['json', 'form', 'text'],
+    extendTypes: {
+      text: ['text/xml', 'application/xml'],
+    }
+  }
+
   // add your config here
   config.middleware = [];
 
