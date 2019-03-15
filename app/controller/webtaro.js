@@ -3,7 +3,9 @@
 const Controller = require('egg').Controller;
 const qiniu = require('qiniu');
 const md5 = require('../service/md5');
+const xml2js = require('xml2js')
 
+const parser = new xml2js.Parser()
 
 class WebtaroController extends Controller {
 
@@ -82,6 +84,8 @@ class WebtaroController extends Controller {
         'content-type': 'text/html',
       },
     });
+
+    console.log(rePay.data);
 
     ctx.body = rePay.data;
   }

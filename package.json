@@ -8,7 +8,8 @@
     "egg-cors": "^2.1.0",
     "egg-mongoose": "^3.1.0",
     "egg-scripts": "^2.5.0",
-    "qiniu": "^7.2.1"
+    "qiniu": "^7.2.1",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "autod": "^3.0.1",
