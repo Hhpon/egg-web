@@ -10,6 +10,7 @@
     "egg-scripts": "^2.5.0",
     "qiniu": "^7.2.1",
     "xml2js": "^0.4.19"
+    "fs": "0.0.1-security",
   },
   "devDependencies": {
     "autod": "^3.0.1",

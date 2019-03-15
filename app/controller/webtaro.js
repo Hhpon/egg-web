@@ -6,6 +6,7 @@ const md5 = require('../service/md5');
 const xml2js = require('xml2js')
 
 const parser = new xml2js.Parser()
+const fs = require('fs')
 
 class WebtaroController extends Controller {
 
@@ -13,6 +14,7 @@ class WebtaroController extends Controller {
   async getWechatMes() {
     const ctx = this.ctx;
     console.log(ctx.request.body);
+    fs.writeFileSync('chatMes.txt', ctx.request.body)
     ctx.body = 'ok'
   }
 
