@@ -3,10 +3,6 @@
 const Controller = require('egg').Controller;
 const qiniu = require('qiniu');
 const md5 = require('../service/md5');
-const xml2js = require('xml2js')
-
-const parser = new xml2js.Parser()
-const fs = require('fs')
 
 class WebtaroController extends Controller {
 
@@ -14,7 +10,6 @@ class WebtaroController extends Controller {
   async getWechatMes() {
     const ctx = this.ctx;
     console.log(ctx.request.body);
-    fs.writeFileSync('chatMes.txt', ctx.request.body)
     if (ctx.request.body !== null) {
       const result = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>'
       ctx.body = result;
@@ -92,26 +87,22 @@ class WebtaroController extends Controller {
       },
     });
 
-    console.log(rePay.data);
-
     ctx.body = rePay.data;
   }
 
+  // 再次签名
   async signAgain() {
     const ctx = this.ctx;
-    const sign = ctx.request.body.sign;
+    const prepay_id = ctx.request.body.prepay_id;
     const appid = ctx.request.body.appId;
     const timeStamp = ctx.request.body.timeStamp;
     const nonceStr = Math.random().toString(36).substr(2, 15);
     const signType = ctx.request.body.signType;
-    const prepay_id = sign.split('prepay_id')[1].slice(10, -5);
 
     // 再次签名(第一次签名是appid，第二次是appId，注意大小写)
     const signAgain = `appId=${appid}&nonceStr=${nonceStr}&package=prepay_id=${prepay_id}&signType=${signType}&timeStamp=${timeStamp}&key=sxpyangpeng2018sxpyangpeng201818`
     const paySign = md5.md5(signAgain).toUpperCase();
 
-    console.log(signAgain);
-    console.log(paySign);
     const payData = {
       nonceStr: nonceStr,
       paySign: paySign,
@@ -122,13 +113,63 @@ class WebtaroController extends Controller {
     ctx.body = payData;
   }
 
+  // 查询订单
+  async checkOrder() {
+    const ctx = this.ctx;
+    const appid = ctx.request.body.appid;
+    const mch_id = ctx.request.body.mch_id;
+    const out_trade_no = ctx.request.body.out_trade_no;
+    const nonce_str = Math.random().toString(36).substr(2, 15);
 
+    const checkSign = `appid=${appid}&mch_id=${mch_id}&nonce_str=${nonce_str}&out_trade_no=${out_trade_no}&key=sxpyangpeng2018sxpyangpeng201818`
+    const sign = md5.md5(checkSign).toUpperCase();
 
+    const check = {
+      appid: appid,
+      mch_id: mch_id,
+      out_trade_no: out_trade_no,
+      nonce_str: nonce_str,
+      sign: sign
+    }
 
+    // 将json转换成xml格式才能传到微信后台
+    function json2xml(obj) {
+      return _json2xml('xml', obj).replace('<xml>', '<xml>');
 
+      function _json2xml(key, obj) {
+        var xml = '';
+        if (Array.isArray(obj)) {
+          for (var i = 0; i < obj.length; ++i) {
+            xml += _json2xml(key, obj[i]);
+          }
+          return xml;
+        } else if (typeof obj === 'object') {
+          for (var _key in obj) {
+            xml += _json2xml(_key, obj[_key]);
+          }
+          return _concat(key, xml);
+        } else {
+          return _concat(key, obj);
+        }
+      }
 
+      function _concat(key, item) {
+        return '<' + key + '>' + item + '</' + key + '>';
+      }
+    }
 
+    const xmlAsStr = json2xml(check);
+    console.log(check);
 
+    const checked = await ctx.curl('https://api.mch.weixin.qq.com/pay/orderquery', {
+      method: 'POST',
+      content: xmlAsStr.toString(),
+      headers: {
+        'content-type': 'text/html',
+      },
+    });
+    ctx.body = checked.data;
+  }
 
 
 
@@ -183,9 +224,7 @@ class WebtaroController extends Controller {
       country: userInfo.country,
       avatarUrl: userInfo.avatarUrl,
       openId: userInfo.openId,
-      cart: userInfo.cart,
-      address: userInfo.address,
-      orderList: userInfo.orderList
+      cart: userInfo.cart
     })
 
     await user.save();

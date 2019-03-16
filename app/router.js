@@ -9,6 +9,7 @@ module.exports = app => {
   router.post('/getWechatMes', controller.webtaro.getWechatMes);
   router.post('/toRePay', controller.webtaro.toRePay);
   router.post('/signAgain', controller.webtaro.signAgain);
+  router.post('/checkOrder', controller.webtaro.checkOrder);
   router.get('/gettoken', controller.webback.gettoken);
   router.post('/uploadMes', controller.webback.uploadMes);
   router.get('/gettableGoods', controller.webback.gettableGoods);
