@@ -172,6 +172,29 @@ class WebtaroController extends Controller {
   }
 
 
+  // 添加订单
+  async addOrder() {
+    const ctx = this.ctx;
+    const openId = ctx.request.body.openId;
+    const address = ctx.request.body.address;
+    const payGoods = ctx.request.body.payGoods;
+    const out_trade_no = ctx.request.body.out_trade_no;
+    const total_fee = ctx.request.body.total_fee;
+
+    const Order = ctx.model.Order;
+    const order = new Order({
+      openId: openId,
+      address: address,
+      payGoods: payGoods,
+      out_trade_no: out_trade_no,
+      total_fee: total_fee
+    })
+
+    await order.save();
+    ctx.body = '生成订单成功！'
+  }
+
+
 
   // 主页面获取商品列表
   async getGoods() {
