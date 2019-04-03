@@ -7,7 +7,8 @@ module.exports = app => {
     address: { type: Object },
     payGoods: { type: Array },
     out_trade_no: { type: String },
-    total_fee: { type: Number }
+    total_fee: { type: Number },
+    status: { type: String }
   });
 
   return mongoose.model('Order', OrderSchema);

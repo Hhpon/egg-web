@@ -180,6 +180,7 @@ class WebtaroController extends Controller {
     const payGoods = ctx.request.body.payGoods;
     const out_trade_no = ctx.request.body.out_trade_no;
     const total_fee = ctx.request.body.total_fee;
+    const status = ctx.request.body.status;
 
     const Order = ctx.model.Order;
     const order = new Order({
@@ -187,13 +188,24 @@ class WebtaroController extends Controller {
       address: address,
       payGoods: payGoods,
       out_trade_no: out_trade_no,
-      total_fee: total_fee
+      total_fee: total_fee,
+      status: status
     })
 
     await order.save();
     ctx.body = '生成订单成功！'
   }
 
+  // 获取订单详情
+  async getOrderDetail() {
+    const ctx = this.ctx;
+    const out_trade_no = ctx.request.body.out_trade_no;
+
+    const Order = ctx.model.Order;
+    const getOrderDetail = await Order.find({ out_trade_no: out_trade_no });
+
+    ctx.body = getOrderDetail;
+  }
 
 
   // 主页面获取商品列表
