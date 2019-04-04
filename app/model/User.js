@@ -11,9 +11,7 @@ module.exports = app => {
     country: { type: String },
     avatarUrl: { type: String },
     openId: { type: String },
-    cart: { type: Array },
-    address: { type: Array },
-    orderList: { type: Array }
+    cart: { type: Array }
   });
 
   return mongoose.model('User', UserSchema);

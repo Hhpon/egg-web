@@ -165,9 +165,7 @@ class HomeController extends Controller {
       country: userInfo.country,
       avatarUrl: userInfo.avatarUrl,
       openId: userInfo.openId,
-      cart: userInfo.cart,
-      address: userInfo.address,
-      orderList: userInfo.orderList
+      cart: userInfo.cart
     })
 
     await user.save();
