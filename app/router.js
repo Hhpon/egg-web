@@ -16,10 +16,6 @@ module.exports = app => {
   router.post('/changeOrderStatus', controller.webtaro.changeOrderStatus);
   router.post('/deleteOrder', controller.webtaro.deleteOrder);
   router.post('/getOrders', controller.webtaro.getOrders);
-  router.get('/gettoken', controller.webback.gettoken);
-  router.post('/uploadMes', controller.webback.uploadMes);
-  router.get('/gettableGoods', controller.webback.gettableGoods);
-  router.post('/deleteGood', controller.webback.deleteGood);
   router.post('/getGoods', controller.webtaro.getGoods);
   router.post('/getGoodDetails', controller.webtaro.getGoodDetails);
   router.post('/onLogin', controller.webtaro.onLogin);
@@ -28,4 +24,12 @@ module.exports = app => {
   router.post('/deleteUserCart', controller.webtaro.deleteUserCart);
   router.post('/editUserCart', controller.webtaro.editUserCart);
   router.get('/getUserInfo', controller.webtaro.getUserInfo);
+
+  router.get('/gettoken', controller.webback.gettoken);
+  router.post('/uploadMes', controller.webback.uploadMes);
+  router.get('/gettableGoods', controller.webback.gettableGoods);
+  router.post('/deleteGood', controller.webback.deleteGood);
+  router.get('/getOrder', controller.webback.getOrder);
+  router.post('/ship', controller.webback.ship);
+  router.post('/deleteOrders', controller.webback.deleteOrders);
 };
