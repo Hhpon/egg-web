@@ -5,7 +5,7 @@ const qiniu = require('qiniu');
 
 class WebbackController extends Controller {
 
-  async test(){
+  async test() {
     const ctx = this.ctx;
 
     ctx.body = '该域名只能使用https访问哦！'
@@ -122,6 +122,36 @@ class WebbackController extends Controller {
       })
     }
     ctx.body = 'ok'
+  }
+
+  // 订单管理获取订单
+  async getOrder() {
+    const ctx = this.ctx;
+    const Order = ctx.model.Order;
+    const getOrder = await Order.find();
+    ctx.body = getOrder;
+  }
+
+  // 订单发货
+  async ship() {
+    const ctx = this.ctx;
+    const out_trade_no = ctx.request.body.out_trade_no;
+
+    const Order = ctx.model.Order;
+    await Order.updateOne({ out_trade_no: out_trade_no }, { status: '待收货' });
+
+    ctx.body = '发货成功';
+  }
+
+  // 删除订单
+  async deleteOrders() {
+    const ctx = this.ctx;
+    const out_trade_no = ctx.request.body.out_trade_no;
+
+    const Order = ctx.model.Order;
+    await Order.remove({ out_trade_no: out_trade_no });
+
+    ctx.body = '删除订单成功';
   }
 
 }
