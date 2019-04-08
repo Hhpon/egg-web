@@ -11,6 +11,7 @@ module.exports = app => {
   router.post('/signAgain', controller.webtaro.signAgain);
   router.post('/checkOrder', controller.webtaro.checkOrder);
   router.post('/closeOrder', controller.webtaro.closeOrder);
+  router.post('/refund', controller.webtaro.refund);
   router.post('/addOrder', controller.webtaro.addOrder);
   router.post('/getOrderDetail', controller.webtaro.getOrderDetail);
   router.post('/changeOrderStatus', controller.webtaro.changeOrderStatus);
