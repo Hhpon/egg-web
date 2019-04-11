@@ -132,15 +132,16 @@ class WebbackController extends Controller {
     ctx.body = getOrder;
   }
 
-  // 订单发货
+  // 订单发货, 自动确认收货
   async ship() {
     const ctx = this.ctx;
     const out_trade_no = ctx.request.body.out_trade_no;
+    const status = ctx.request.body.status;
 
     const Order = ctx.model.Order;
-    await Order.updateOne({ out_trade_no: out_trade_no }, { status: '待收货' });
+    await Order.updateOne({ out_trade_no: out_trade_no }, { status: status });
 
-    ctx.body = '发货成功';
+    ctx.body = 'ok';
   }
 
   // 删除订单
