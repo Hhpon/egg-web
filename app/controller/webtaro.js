@@ -364,6 +364,20 @@ class WebtaroController extends Controller {
     ctx.body = getOrder;
   }
 
+
+  // 改变商品库存
+  async changeAmount() {
+    const ctx = this.ctx;
+    const payGoods = ctx.request.body.payGoods;
+
+    const GoodsDetails = ctx.model.GoodsDetails;
+    for (var i = 0; i < payGoods.length; i++) {
+      await GoodsDetails.updateOne({ goodsId: payGoods[i].goodsId }, { saleAmount: payGoods[i].shoppingNum });
+      await GoodsDetails.updateOne({ goodsId: payGoods[i].goodsId }, { $inc: { amount: -payGoods[i].shoppingNum } });
+    }
+    ctx.body = '改变库存成功'
+  }
+
   // 主页面获取商品列表
   async getGoods() {
     const ctx = this.ctx;
