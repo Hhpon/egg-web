@@ -3,6 +3,7 @@
 const Controller = require('egg').Controller;
 const qiniu = require('qiniu');
 const md5 = require('../service/md5');
+const fs = require('fs');
 
 class WebtaroController extends Controller {
 
@@ -286,6 +287,8 @@ class WebtaroController extends Controller {
     const refunded = await ctx.curl('https://api.mch.weixin.qq.com/secapi/pay/refund', {
       method: 'POST',
       content: xmlAsStr.toString(),
+      cert: fs.readFileSync('./app/cert/apiclient_cert.pem'),
+      key: fs.readFileSync('./app/cert/apiclient_key.pem'),
       headers: {
         'content-type': 'text/html',
       },
@@ -364,14 +367,25 @@ class WebtaroController extends Controller {
     ctx.body = getOrder;
   }
 
+
+  // 改变商品库存
+  async changeAmount() {
+    const ctx = this.ctx;
+    const payGoods = ctx.request.body.payGoods;
+
+    const GoodsDetails = ctx.model.GoodsDetails;
+    for (var i = 0; i < payGoods.length; i++) {
+      await GoodsDetails.updateOne({ goodsId: payGoods[i].goodsId }, { saleAmount: payGoods[i].shoppingNum });
+      await GoodsDetails.updateOne({ goodsId: payGoods[i].goodsId }, { $inc: { amount: -payGoods[i].shoppingNum } });
+    }
+    ctx.body = '改变库存成功'
+  }
+
   // 主页面获取商品列表
   async getGoods() {
     const ctx = this.ctx;
-    const index = '' + ctx.request.body.index;
-    // 取到链接传输过来的盒子之后连接到数据库
     const Goods = ctx.model.Goods;
-    const getGoods = await Goods.find({ classifyValue: index }); // 这个数据库查找可能会出现bug
-
+    const getGoods = await Goods.find({});
     ctx.body = getGoods;
   }
 

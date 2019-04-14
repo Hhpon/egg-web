@@ -17,7 +17,8 @@ module.exports = app => {
   router.post('/changeOrderStatus', controller.webtaro.changeOrderStatus);
   router.post('/deleteOrder', controller.webtaro.deleteOrder);
   router.post('/getOrders', controller.webtaro.getOrders);
-  router.post('/getGoods', controller.webtaro.getGoods);
+  router.post('/changeAmount', controller.webtaro.changeAmount);
+  router.get('/getGoods', controller.webtaro.getGoods);
   router.post('/getGoodDetails', controller.webtaro.getGoodDetails);
   router.post('/onLogin', controller.webtaro.onLogin);
   router.post('/sellHandle', controller.webtaro.sellHandle);
