@@ -11,7 +11,6 @@ module.exports = app => {
   router.post('/signAgain', controller.webtaro.signAgain);
   router.post('/checkOrder', controller.webtaro.checkOrder);
   router.post('/closeOrder', controller.webtaro.closeOrder);
-  router.post('/refund', controller.webtaro.refund);
   router.post('/addOrder', controller.webtaro.addOrder);
   router.post('/getOrderDetail', controller.webtaro.getOrderDetail);
   router.post('/changeOrderStatus', controller.webtaro.changeOrderStatus);
@@ -32,6 +31,7 @@ module.exports = app => {
   router.get('/gettableGoods', controller.webback.gettableGoods);
   router.post('/deleteGood', controller.webback.deleteGood);
   router.get('/getOrder', controller.webback.getOrder);
-  router.post('/ship', controller.webback.ship);
+  router.post('/changeStatus', controller.webback.changeStatus);
   router.post('/deleteOrders', controller.webback.deleteOrders);
+  router.post('/refund', controller.webback.refund);
 };
