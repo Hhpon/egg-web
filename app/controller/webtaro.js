@@ -230,72 +230,7 @@ class WebtaroController extends Controller {
     ctx.body = closed.data;
   }
 
-  // 订单申请退款
-  async refund() {
-    const ctx = this.ctx;
-    const appid = ctx.request.body.appid;
-    const mch_id = ctx.request.body.mch_id;
-    const out_trade_no = ctx.request.body.out_trade_no;
-    const out_refund_no = ctx.request.body.out_refund_no;
-    const total_fee = ctx.request.body.total_fee;
-    const refund_fee = ctx.request.body.refund_fee;
-    const nonce_str = Math.random().toString(36).substr(2, 15);
-
-    const refundSign = `appid=${appid}&mch_id=${mch_id}&nonce_str=${nonce_str}&out_refund_no=${out_refund_no}&out_trade_no=${out_trade_no}&refund_fee=${refund_fee}&total_fee=${total_fee}&key=sxpyangpeng2018sxpyangpeng201818`
-    const sign = md5.md5(refundSign).toUpperCase();
-
-    const refund = {
-      appid: appid,
-      mch_id: mch_id,
-      out_trade_no: out_trade_no,
-      out_refund_no: out_refund_no,
-      total_fee: total_fee,
-      refund_fee: refund_fee,
-      nonce_str: nonce_str,
-      sign: sign
-    }
-
-    // 将json转换成xml格式才能传到微信后台
-    function json2xml(obj) {
-      return _json2xml('xml', obj).replace('<xml>', '<xml>');
-
-      function _json2xml(key, obj) {
-        var xml = '';
-        if (Array.isArray(obj)) {
-          for (var i = 0; i < obj.length; ++i) {
-            xml += _json2xml(key, obj[i]);
-          }
-          return xml;
-        } else if (typeof obj === 'object') {
-          for (var _key in obj) {
-            xml += _json2xml(_key, obj[_key]);
-          }
-          return _concat(key, xml);
-        } else {
-          return _concat(key, obj);
-        }
-      }
-
-      function _concat(key, item) {
-        return '<' + key + '>' + item + '</' + key + '>';
-      }
-    }
-
-    const xmlAsStr = json2xml(refund);
-    console.log(refund);
-
-    const refunded = await ctx.curl('https://api.mch.weixin.qq.com/secapi/pay/refund', {
-      method: 'POST',
-      content: xmlAsStr.toString(),
-      cert: fs.readFileSync('./app/cert/apiclient_cert.pem'),
-      key: fs.readFileSync('./app/cert/apiclient_key.pem'),
-      headers: {
-        'content-type': 'text/html',
-      },
-    });
-    ctx.body = refunded.data;
-  }
-
+  
 
   // 添加订单
   async addOrder() {
