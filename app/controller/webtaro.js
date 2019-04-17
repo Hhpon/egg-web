@@ -230,7 +230,7 @@ class WebtaroController extends Controller {
     ctx.body = closed.data;
   }
 
-  
+
 
   // 添加订单
   async addOrder() {
@@ -349,6 +349,7 @@ class WebtaroController extends Controller {
       dataType: 'json',
       timeout: 3000
     })
+    console.log(result);
     const openid = result.data.openid;
     userInfo.openId = openid;
 
