@@ -30,6 +30,7 @@ module.exports = app => {
   router.post('/uploadMes', controller.webback.uploadMes);
   router.get('/gettableGoods', controller.webback.gettableGoods);
   router.post('/deleteGood', controller.webback.deleteGood);
+  router.post('/updateGood', controller.webback.updateGood);
   router.get('/getOrder', controller.webback.getOrder);
   router.post('/changeStatus', controller.webback.changeStatus);
   router.post('/deleteOrders', controller.webback.deleteOrders);

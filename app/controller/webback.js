@@ -34,25 +34,10 @@ class WebbackController extends Controller {
   async uploadMes() {
     const ctx = this.ctx;
     const goodsList = ctx.request.body.goodsList;
-    // const sliderView = goodsList.sliderView;
     const goodsId = new Date().getTime();
-    // 连接到 Goods 数据库
+
     const Goods = ctx.model.Goods;
-    // // 连接到 Slider 数据库
-    // const Slider = ctx.model.Slider;
-    // // 建立 slider 表 并存储
-    // const slider = new Slider({
-    //   name: goodsList.name,
-    //   subTitle: goodsList.subTitle,
-    //   price: goodsList.price,
-    //   oldPrice: goodsList.oldPrice,
-    //   classifyValue: goodsList.classifyValue,
-    //   sliderUrl: goodsList.sliderUrl,
-    //   titleUrl: goodsList.titleUrl,
-    //   goodsId: goodsId,
-    //   sell: true
-    // })
-    // 建立 goods 表 并存入
+
     const goods = new Goods({
       name: goodsList.name,
       subTitle: goodsList.subTitle,
@@ -66,15 +51,9 @@ class WebbackController extends Controller {
       sliderView: goodsList.sliderView
     })
     await goods.save();
-    // 判断保存的数据是否是轮播图
-    // if (sliderView) {
-    //   await slider.save();
-    // } else {
-    //   await goods.save();
-    // }
-    // 连接到 GoodsDetails 数据库
+
     const GoodsDetails = ctx.model.GoodsDetails;
-    // 建立 GoodsDetails 表 并存入
+
     const goodsDetails = new GoodsDetails({
       name: goodsList.name,
       subTitle: goodsList.subTitle,
@@ -93,6 +72,7 @@ class WebbackController extends Controller {
     ctx.body = 'ok';
   }
 
+  // 获取商品
   async gettableGoods() {
     const ctx = this.ctx;
     // 连接数据库表
@@ -101,29 +81,40 @@ class WebbackController extends Controller {
     ctx.body = tableGoods;
   }
 
+  // 删除商品
   async deleteGood() {
     const ctx = this.ctx;
     const goodsId = ctx.request.body.goodsId;
-    const sliderView = ctx.request.body.sliderView;
     // 连接各个数据库
     const GoodsDetails = ctx.model.GoodsDetails;
     const Goods = ctx.model.Goods;
-    const Slider = ctx.model.Slider;
-    await GoodsDetails.remove({ goodsId: goodsId }).exec();
-    if (sliderView) {
-      await Slider.remove({ goodsId: goodsId }, (err) => {
-        if (!err) {
-          console.log('轮播删除成功！');
-        }
-      })
-    } else {
-      await Goods.remove({ goodsId: goodsId }, (err) => {
-        if (!err) {
-          console.log('商品删除成功！')
-        }
-      })
-    }
-    ctx.body = 'ok'
+    await GoodsDetails.remove({ goodsId: goodsId });
+    await Goods.remove({ goodsId: goodsId })
+    ctx.body = '删除商品成功'
+  }
+
+  // 修改商品
+  async updateGood() {
+    const ctx = this.ctx;
+    const goodList = ctx.request.body.goodList;
+    const GoodsDetails = ctx.model.GoodsDetails;
+    const Goods = ctx.model.Goods;
+
+    await GoodsDetails.updateOne({ goodsId: goodList.goodsId }, {
+      name: goodList.name,
+      subTitle: goodList.subTitle,
+      price: goodList.price,
+      oldPrice: goodList.oldPrice,
+      classifyValue: goodList.classifyValue
+    });
+    await Goods.updateOne({ goodsId: goodList.goodsId }, {
+      name: goodList.name,
+      subTitle: goodList.subTitle,
+      price: goodList.price,
+      oldPrice: goodList.oldPrice,
+      classifyValue: goodList.classifyValue
+    });
+    ctx.body = "修改商品成功"
   }
 
   // 订单管理获取订单
