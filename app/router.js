@@ -35,4 +35,5 @@ module.exports = app => {
   router.post('/changeStatus', controller.webback.changeStatus);
   router.post('/deleteOrders', controller.webback.deleteOrders);
   router.post('/refund', controller.webback.refund);
+  router.post('/sendemail', controller.home.sendemail);
 };

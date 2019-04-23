@@ -2,8 +2,52 @@
 
 const Controller = require('egg').Controller;
 const qiniu = require('qiniu');
+const nodemailer = require('nodemailer');
+
+function mailer() {
+
+
+
+}
 
 class HomeController extends Controller {
+
+  async sendemail() {
+    // faczonflixnsbahj
+    const ctx = this.ctx;
+    console.log(ctx.request.body.info);
+    let info = ctx.request.body.info;
+    let username = info.username;
+    let tel = info.tel;
+    let result = info.result.toString();
+    let transporter = nodemailer.createTransport({
+      service: 'QQ',
+      port: 465,
+      auth: {
+        user: '3231308323@qq.com',
+        pass: 'zeoxqbiaadwpcifa',
+      }
+    });
+
+    let mailOptions = {
+      from: '"金盛会计" <3231308323@qq.com>',
+      to: '624791164@qq.com',
+      subject: '有新的订单',
+      text: `${username}+${tel}+${result}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        return
+      }
+      console.log(info);
+      console.log('Message sent: %s', info.messageId);
+
+    });
+    ctx.body = 'ok'
+
+  }
 
   async gettoken() {
     const ctx = this.ctx;
