@@ -9,6 +9,7 @@ class HomeController extends Controller {
   async sendemail() {
     const ctx = this.ctx;
     let info = ctx.request.body.info;
+    console.log(info);
     let username = info.username;
     let tel = info.tel;
     let result = info.result.toString();
@@ -31,11 +32,10 @@ class HomeController extends Controller {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
-        ctx.body = 0
         return
       }
-      ctx.body = 1
     });
+    ctx.body = 1
   }
 
   async gettoken() {
