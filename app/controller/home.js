@@ -4,18 +4,10 @@ const Controller = require('egg').Controller;
 const qiniu = require('qiniu');
 const nodemailer = require('nodemailer');
 
-function mailer() {
-
-
-
-}
-
 class HomeController extends Controller {
 
   async sendemail() {
-    // faczonflixnsbahj
     const ctx = this.ctx;
-    console.log(ctx.request.body.info);
     let info = ctx.request.body.info;
     let username = info.username;
     let tel = info.tel;
@@ -39,14 +31,11 @@ class HomeController extends Controller {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
+        ctx.body = 0
         return
       }
-      console.log(info);
-      console.log('Message sent: %s', info.messageId);
-
+      ctx.body = 1
     });
-    ctx.body = 'ok'
-
   }
 
   async gettoken() {
